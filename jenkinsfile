@@ -39,7 +39,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DockerPass', usernameVariable: 'DockerName')]) {
                 
                 sh 'echo ${DockerPass} | docker login -u ${DockerName} --password-stdin'
-                
+                sh 'docker push neeraj91/${IMAGE_NAME}:${IMAGE_TAG}'
+                sh 'docker push neeraj91/${IMAGE_NAME}:latest '
                 }
             }
         }
@@ -49,7 +50,7 @@ pipeline {
 
             when {
 
-                branch ''
+                branch 'staging'
             }
 
             steps {
