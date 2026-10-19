@@ -43,6 +43,43 @@ pipeline {
                 }
             }
         }
+
+        
+        stage('Deploy to staging') {
+
+            when {
+
+                branch ''
+            }
+
+            steps {
+
+                sh 'docker rm -f flask-staging || true' 
+                sh 'docker run -d --name flask-staging -p 5001:5000 ${IMAGE_NAME}:${IMAGE_TAG}'
+                timeout(time: 10, unit: 'MINUTES') {
+                    input message: 'Finished checking the staging site on port 5001? (Click "Proceed" to stop it)'
+                }
+            }
+        }
+
+        stage('Deploy to prod') {
+            
+            when {
+           
+                branch 'prod'
+           
+            }
+           
+            steps {
+           
+                input message: 'Deploy to production?', ok: 'Deploy'
+                sh 'docker rm -f flask-prod || true'
+                sh 'docker run -d --name flask-prod -p 5002:5000 ${IMAGE_NAME}:${IMAGE_TAG}'
+           
+            }
+        }
+    }
+
     }
 
     post {
