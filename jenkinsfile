@@ -2,6 +2,12 @@ pipeline {
 
     agent any 
 
+    environment {
+
+        IMAGE_NAME = "flask-app"
+        IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+
     stages { 
 
         stage('checkout') {
